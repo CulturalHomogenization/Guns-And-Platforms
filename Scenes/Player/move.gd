@@ -25,7 +25,7 @@ func process_physics(delta: float) -> State:
 	
 	if movement < 0:
 		owner.animations.flip_h = true
-		owner.animations.offset.x = -10
+		owner.animations.offset.x = 0
 	else:
 		owner.animations.flip_h = false
 		owner.animations.offset.x = 10

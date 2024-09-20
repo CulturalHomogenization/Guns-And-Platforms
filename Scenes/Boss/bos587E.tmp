@@ -14,7 +14,6 @@
 [ext_resource type="Script" path="res://Scenes/Boss/pursuit.gd" id="12_2v71x"]
 [ext_resource type="Script" path="res://Scenes/Boss/idle.gd" id="13_yppxn"]
 [ext_resource type="Script" path="res://Scenes/Boss/smash.gd" id="14_7wntc"]
-[ext_resource type="Script" path="res://Scenes/Boss/shield.gd" id="15_53hen"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mq6i6"]
 atlas = ExtResource("1_8x78h")
@@ -107,6 +106,10 @@ region = Rect2(288, 32, 64, 64)
 [sub_resource type="AtlasTexture" id="AtlasTexture_5e2qk"]
 atlas = ExtResource("5_kjj4l")
 region = Rect2(384, 32, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3xqp2"]
+atlas = ExtResource("5_kjj4l")
+region = Rect2(480, 32, 64, 64)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_gt64d"]
 atlas = ExtResource("6_somc7")
@@ -295,8 +298,11 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_5e2qk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3xqp2")
 }],
-"loop": false,
+"loop": true,
 "name": &"shield",
 "speed": 7.5
 }, {
@@ -394,7 +400,7 @@ animations = [{
 }]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_oytmb"]
-radius = 14.0
+radius = 18.0
 height = 66.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_j2iae"]
@@ -406,9 +412,8 @@ radius = 40.0125
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_my0jm"]
 size = Vector2(212, 75)
 
-[node name="Boss" type="CharacterBody2D" node_paths=PackedStringArray("shield_state") groups=["Enemies"]]
+[node name="Boss" type="CharacterBody2D" groups=["Enemies"]]
 script = ExtResource("1_0dcw4")
-shield_state = NodePath("state_machine/shield")
 
 [node name="animations" type="AnimatedSprite2D" parent="."]
 position = Vector2(4, -14)
@@ -433,14 +438,11 @@ disabled = true
 collision_layer = 0
 collision_mask = 3
 
-[node name="ProjectileDetationShape" type="CollisionShape2D" parent="ProjectileDetection"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ProjectileDetection"]
 position = Vector2(3, -8)
 shape = SubResource("CircleShape2D_y41h3")
 
-[node name="ShieldTimer" type="Timer" parent="ProjectileDetection"]
-wait_time = 10.0
-one_shot = true
-autostart = true
+[node name="Timer" type="Timer" parent="ProjectileDetection"]
 
 [node name="PlayerDetection" type="Area2D" parent="."]
 
@@ -448,9 +450,8 @@ autostart = true
 position = Vector2(1, -8.5)
 shape = SubResource("RectangleShape2D_my0jm")
 
-[node name="state_machine" type="Node" parent="." node_paths=PackedStringArray("shield_state", "starting_state")]
+[node name="state_machine" type="Node" parent="." node_paths=PackedStringArray("starting_state")]
 script = ExtResource("10_1sn0x")
-shield_state = NodePath("shield")
 starting_state = NodePath("idle")
 
 [node name="pursuit" type="Node" parent="state_machine" node_paths=PackedStringArray("smash_state")]
@@ -476,10 +477,7 @@ animation_name = "smash"
 
 [node name="stillshoot" type="Node" parent="state_machine"]
 
-[node name="shield" type="Node" parent="state_machine" node_paths=PackedStringArray("walk_state")]
-script = ExtResource("15_53hen")
-walk_state = NodePath("../pursuit")
-animation_name = "shield"
+[node name="shield" type="Node" parent="state_machine"]
 
 [node name="hurt" type="Node" parent="state_machine"]
 
@@ -487,10 +485,8 @@ animation_name = "shield"
 
 [node name="dash" type="Node" parent="state_machine"]
 
-[connection signal="area_entered" from="ProjectileDetection" to="state_machine" method="_on_projectile_detection_area_entered"]
 [connection signal="body_entered" from="ProjectileDetection" to="state_machine/pursuit" method="_on_projectile_detection_body_entered"]
+[connection signal="body_entered" from="ProjectileDetection" to="state_machine/idle" method="_on_projectile_detection_body_entered"]
 [connection signal="body_exited" from="ProjectileDetection" to="state_machine/smash" method="_on_projectile_detection_body_exited"]
-[connection signal="timeout" from="ProjectileDetection/ShieldTimer" to="state_machine" method="_on_timer_timeout"]
-[connection signal="timeout" from="ProjectileDetection/ShieldTimer" to="state_machine/shield" method="_on_shield_timer_timeout"]
 [connection signal="body_entered" from="PlayerDetection" to="state_machine/pursuit" method="_on_player_detection_body_entered"]
 [connection signal="body_entered" from="PlayerDetection" to="state_machine/idle" method="_on_player_detection_body_entered"]

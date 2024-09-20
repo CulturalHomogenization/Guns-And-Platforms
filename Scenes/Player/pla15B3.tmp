@@ -163,7 +163,7 @@ animations = [{
 script = ExtResource("1_ng86c")
 
 [node name="animations" type="AnimatedSprite2D" parent="."]
-position = Vector2(-7, -24)
+position = Vector2(-1, -24)
 sprite_frames = SubResource("SpriteFrames_5ledj")
 animation = &"hurt"
 offset = Vector2(10, 0)
@@ -173,7 +173,7 @@ position = Vector2(0, -16)
 shape = SubResource("CapsuleShape2D_7rjs2")
 
 [node name="gun" type="AnimatedSprite2D" parent="."]
-position = Vector2(-3, -16)
+position = Vector2(1, -18)
 rotation = -6.28319
 scale = Vector2(0.8, 0.8)
 sprite_frames = SubResource("SpriteFrames_nupkb")
@@ -206,7 +206,7 @@ script = ExtResource("5_t0otw")
 fall_state = NodePath("../fall")
 idle_state = NodePath("../idle")
 move_state = NodePath("../move")
-jump_force = 1000.0
+jump_force = 350.0
 animation_name = "jump"
 move_speed = 200.0
 
@@ -235,3 +235,4 @@ animation_name = "hurt"
 
 [connection signal="ready" from="." to="." method="_on_ready"]
 [connection signal="timeout" from="gun/Timer" to="gun" method="_on_timer_timeout"]
+[connection signal="timeout" from="state_machine/hurt/Timer" to="state_machine/hurt" method="_on_timer_timeout"]
