@@ -13,6 +13,7 @@ func spawn_enemy():
 	world.add_child(enemy)
 
 func _on_spawn_timer_timeout() -> void:
-	spawn_enemy()
-	print("spawned")
-	spawn_timer.start()
+	#spawn_enemy()
+	#print("spawned")
+	#spawn_timer.start()
+	pass

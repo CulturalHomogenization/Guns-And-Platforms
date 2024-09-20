@@ -18,13 +18,13 @@
 atlas = ExtResource("2_jursn")
 region = Rect2(144, 0, 48, 48)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_oc8ua"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_56qvy"]
 atlas = ExtResource("3_658a4")
-region = Rect2(0, 0, 32, 48)
+region = Rect2(0, 0, 24, 48)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_2dxf7"]
+[sub_resource type="AtlasTexture" id="AtlasTexture_imnxp"]
 atlas = ExtResource("3_658a4")
-region = Rect2(48, 0, 32, 48)
+region = Rect2(48, 0, 24, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_5ldmf"]
 atlas = ExtResource("2_qjb0h")
@@ -82,14 +82,14 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_oc8ua")
+"texture": SubResource("AtlasTexture_56qvy")
 }, {
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_2dxf7")
+"texture": SubResource("AtlasTexture_imnxp")
 }],
-"loop": false,
+"loop": true,
 "name": &"hurt",
-"speed": 5.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -159,8 +159,9 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="player" type="CharacterBody2D" groups=["Player"]]
+[node name="player" type="CharacterBody2D" node_paths=PackedStringArray("hurt_state") groups=["Player"]]
 script = ExtResource("1_ng86c")
+hurt_state = NodePath("state_machine/hurt")
 
 [node name="animations" type="AnimatedSprite2D" parent="."]
 position = Vector2(-7, -24)
@@ -232,6 +233,13 @@ move_state = NodePath("../move")
 animation_name = "hurt"
 
 [node name="Timer" type="Timer" parent="state_machine/hurt"]
+wait_time = 0.5
+
+[node name="Invinsibility" type="Timer" parent="."]
+wait_time = 2.0
 
 [connection signal="ready" from="." to="." method="_on_ready"]
 [connection signal="timeout" from="gun/Timer" to="gun" method="_on_timer_timeout"]
+[connection signal="timeout" from="state_machine/hurt/Timer" to="." method="_on_timer_timeout"]
+[connection signal="timeout" from="state_machine/hurt/Timer" to="state_machine/hurt" method="_on_timer_timeout"]
+[connection signal="timeout" from="Invinsibility" to="." method="_on_invinsibility_timeout"]

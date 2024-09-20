@@ -8,6 +8,8 @@ func enter() -> void:
 
 func process_frame(delta: float) -> Boss_State:
 	if owner.caught:
+		if owner.animations.frame == 2 or 3:
+			owner.player.take_damage(damage)
 		return null
 	else:
 		return walk_state
