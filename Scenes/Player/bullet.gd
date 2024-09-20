@@ -2,6 +2,7 @@ extends Area2D
 
 @export var speed : int = 1000
 @export var damage : int = 5
+@onready var timer: Timer = $Timer
 
 func _ready() -> void:
 	set_as_top_level(true)
@@ -21,6 +22,10 @@ func _on_body_entered(body: Node2D) -> void:
 		pass
 	elif body.is_in_group("Enemies") and body.has_method("take_damage"):
 		body.take_damage(damage)
-		queue_free()
+		print("enemy hit")
+		timer.start()
 	else:
 		queue_free()
+
+func _on_timer_timeout() -> void:
+	queue_free()

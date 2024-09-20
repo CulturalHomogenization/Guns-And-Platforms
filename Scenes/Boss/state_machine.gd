@@ -35,5 +35,9 @@ func _on_timer_timeout() -> void:
 		owner.shield = true
 
 func _on_projectile_detection_area_entered(area: Area2D) -> void:
-	if owner.shield and current_state != shield_state and area.is_in_group("Bullet"):
-		change_state(shield_state)
+	print("something")
+	if owner.shield and current_state != shield_state:
+		print("bullet???")
+		if area.is_in_group("Bullet"):
+			print("bullet")
+			change_state(shield_state)

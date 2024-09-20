@@ -3,12 +3,9 @@ extends State
 @export var move_state: State
 @onready var timer: Timer = $Timer
 var invinsible : bool = true
-var offset = null
 
 func enter() -> void:
 	super()
-	offset = owner.animations.offset
-	owner.animations.offset.x = 0
 	owner.invinsible = true
 	invinsible = true
 	timer.start()
@@ -18,6 +15,9 @@ func exit() -> void:
 
 func process_frame(delta: float) -> State:
 	if invinsible:
+		if !owner.is_on_floor():
+			owner.velocity.y += gravity * delta
+			owner.move_and_slide()
 		return null
 	else:
 		return move_state

@@ -7,10 +7,6 @@ extends State
 func enter() -> void:
 	super()
 	owner.velocity.x = 0
-	if owner.animations.flip_h == true:
-		owner.animations.offset.x = -5
-	else:
-		owner.animations.offset.x = 16
 
 
 
