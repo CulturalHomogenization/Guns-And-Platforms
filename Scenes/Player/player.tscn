@@ -238,6 +238,10 @@ wait_time = 0.5
 [node name="Invinsibility" type="Timer" parent="."]
 wait_time = 2.0
 
+[node name="Dash" type="Timer" parent="."]
+wait_time = 10.0
+autostart = true
+
 [connection signal="ready" from="." to="." method="_on_ready"]
 [connection signal="timeout" from="gun/Timer" to="gun" method="_on_timer_timeout"]
 [connection signal="timeout" from="state_machine/hurt/Timer" to="." method="_on_timer_timeout"]

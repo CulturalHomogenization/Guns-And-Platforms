@@ -5,7 +5,9 @@ extends CharacterBody2D
 @onready var state_machine = $state_machine
 @export var hurt_state : State
 var invinsible : bool = false
-@onready var invinsibility: Timer = $Invinsibility
+var dash : bool = false
+@onready var invinsibility : Timer = $Invinsibility
+@onready var dash_timer : Timer = $Dash
 
 func _ready() -> void:
 	state_machine.init(self)

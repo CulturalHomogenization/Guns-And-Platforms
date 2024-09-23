@@ -9,7 +9,6 @@ func enter() -> void:
 	owner.velocity.x = 0
 
 
-
 func process_input(event: InputEvent) -> State:
 	if Input.is_action_pressed('jump') and owner.is_on_floor():
 		return jump_state
