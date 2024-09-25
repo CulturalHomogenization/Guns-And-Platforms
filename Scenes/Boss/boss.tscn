@@ -398,7 +398,7 @@ radius = 14.0
 height = 66.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_j2iae"]
-size = Vector2(35, 45.5)
+size = Vector2(88, 54)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_y41h3"]
 radius = 40.0125
@@ -425,7 +425,7 @@ position = Vector2(2, -13)
 collision_mask = 3
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
-position = Vector2(28, 6.25)
+position = Vector2(-2, 7)
 shape = SubResource("RectangleShape2D_j2iae")
 disabled = true
 
@@ -434,6 +434,7 @@ collision_layer = 0
 collision_mask = 3
 
 [node name="ProjectileDetationShape" type="CollisionShape2D" parent="ProjectileDetection"]
+visible = false
 position = Vector2(3, -8)
 shape = SubResource("CircleShape2D_y41h3")
 
@@ -484,8 +485,6 @@ animation_name = "shield"
 [node name="hurt" type="Node" parent="state_machine"]
 
 [node name="punch" type="Node" parent="state_machine"]
-
-[node name="dash" type="Node" parent="state_machine"]
 
 [connection signal="area_entered" from="ProjectileDetection" to="state_machine" method="_on_projectile_detection_area_entered"]
 [connection signal="body_entered" from="ProjectileDetection" to="state_machine/pursuit" method="_on_projectile_detection_body_entered"]

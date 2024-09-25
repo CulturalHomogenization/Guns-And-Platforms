@@ -22,7 +22,6 @@ func _on_body_entered(body: Node2D) -> void:
 		pass
 	elif body.is_in_group("Enemies") and body.has_method("take_damage"):
 		body.take_damage(damage)
-		print("enemy hit")
 		timer.start()
 	else:
 		queue_free()

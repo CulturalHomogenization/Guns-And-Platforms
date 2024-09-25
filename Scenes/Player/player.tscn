@@ -1,8 +1,9 @@
-[gd_scene load_steps=33 format=3 uid="uid://c0c88735synyl"]
+[gd_scene load_steps=38 format=3 uid="uid://c0c88735synyl"]
 
 [ext_resource type="Script" path="res://Scenes/Player/player.gd" id="1_ng86c"]
 [ext_resource type="Texture2D" uid="uid://cgor4t4n8kuow" path="res://Assets/Character/Jump2.png" id="2_jursn"]
 [ext_resource type="Texture2D" uid="uid://bjndxptsw6x7p" path="res://Assets/Character/Idle1.png" id="2_qjb0h"]
+[ext_resource type="Texture2D" uid="uid://bxi2fm8cuw11v" path="res://Assets/Character/Dash.png" id="2_vipg6"]
 [ext_resource type="Texture2D" uid="uid://bu4gmkiaflcsy" path="res://Assets/Character/Cyborg_hurt.png" id="3_658a4"]
 [ext_resource type="Script" path="res://Scenes/Player/state_machine.gd" id="3_vved1"]
 [ext_resource type="Script" path="res://Scenes/Player/move.gd" id="4_ys83l"]
@@ -14,6 +15,19 @@
 [ext_resource type="Texture2D" uid="uid://da7k7r4muv8e1" path="res://Assets/Character/Run1.png" id="6_v4t1c"]
 [ext_resource type="Script" path="res://Scenes/Player/fall.gd" id="8_7yb0h"]
 [ext_resource type="Script" path="res://Scenes/Player/hurt.gd" id="13_cu4re"]
+[ext_resource type="Script" path="res://Scenes/Player/dash.gd" id="16_68al8"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2jo1o"]
+atlas = ExtResource("2_vipg6")
+region = Rect2(48, 0, 32, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1qwhp"]
+atlas = ExtResource("2_vipg6")
+region = Rect2(96, 0, 32, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i2y2y"]
+atlas = ExtResource("2_vipg6")
+region = Rect2(144, 0, 32, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ivp5q"]
 atlas = ExtResource("2_jursn")
@@ -73,6 +87,20 @@ region = Rect2(240, 0, 32, 48)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_5ledj"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2jo1o")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1qwhp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i2y2y")
+}],
+"loop": true,
+"name": &"dash",
+"speed": 7.5
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_ivp5q")
@@ -167,7 +195,9 @@ hurt_state = NodePath("state_machine/hurt")
 [node name="animations" type="AnimatedSprite2D" parent="."]
 position = Vector2(-7, -24)
 sprite_frames = SubResource("SpriteFrames_5ledj")
-animation = &"fall"
+animation = &"dash"
+frame = 2
+frame_progress = 0.401941
 offset = Vector2(10, 0)
 
 [node name="collision" type="CollisionShape2D" parent="." groups=["Player"]]
@@ -195,11 +225,12 @@ autostart = true
 script = ExtResource("3_vved1")
 starting_state = NodePath("fall")
 
-[node name="move" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "idle_state", "jump_state")]
+[node name="move" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "idle_state", "jump_state", "dash_state")]
 script = ExtResource("4_ys83l")
 fall_state = NodePath("../fall")
 idle_state = NodePath("../idle")
 jump_state = NodePath("../jump")
+dash_state = NodePath("../dash")
 animation_name = "walk"
 move_speed = 200.0
 
@@ -219,11 +250,12 @@ move_state = NodePath("../move")
 animation_name = "fall"
 move_speed = 200.0
 
-[node name="idle" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "jump_state", "move_state")]
+[node name="idle" type="Node" parent="state_machine" node_paths=PackedStringArray("fall_state", "jump_state", "move_state", "dash_state")]
 script = ExtResource("5_coukq")
 fall_state = NodePath("../fall")
 jump_state = NodePath("../jump")
 move_state = NodePath("../move")
+dash_state = NodePath("../dash")
 animation_name = "idle"
 move_speed = 200.0
 
@@ -235,15 +267,26 @@ animation_name = "hurt"
 [node name="Timer" type="Timer" parent="state_machine/hurt"]
 wait_time = 0.5
 
+[node name="dash" type="Node" parent="state_machine" node_paths=PackedStringArray("move_state")]
+script = ExtResource("16_68al8")
+move_state = NodePath("../move")
+animation_name = "dash"
+move_speed = 500.0
+
+[node name="Timer" type="Timer" parent="state_machine/dash"]
+wait_time = 0.3
+
 [node name="Invinsibility" type="Timer" parent="."]
 wait_time = 2.0
 
 [node name="Dash" type="Timer" parent="."]
-wait_time = 10.0
+wait_time = 5.0
 autostart = true
 
 [connection signal="ready" from="." to="." method="_on_ready"]
 [connection signal="timeout" from="gun/Timer" to="gun" method="_on_timer_timeout"]
 [connection signal="timeout" from="state_machine/hurt/Timer" to="." method="_on_timer_timeout"]
 [connection signal="timeout" from="state_machine/hurt/Timer" to="state_machine/hurt" method="_on_timer_timeout"]
+[connection signal="timeout" from="state_machine/dash/Timer" to="state_machine/dash" method="_on_timer_timeout"]
 [connection signal="timeout" from="Invinsibility" to="." method="_on_invinsibility_timeout"]
+[connection signal="timeout" from="Dash" to="." method="_on_dash_timeout"]

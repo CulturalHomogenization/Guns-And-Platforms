@@ -12,6 +12,7 @@ extends CharacterBody2D
 @onready var shield_timer: Timer = $ProjectileDetection/ShieldTimer
 var caught = false
 var shield : bool = true
+@onready var hurtbox: CollisionShape2D = $Hurtbox/CollisionShape2D
 
 
 func _ready() -> void:

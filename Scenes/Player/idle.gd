@@ -3,6 +3,7 @@ extends State
 @export var fall_state: State
 @export var jump_state: State
 @export var move_state: State
+@export var dash_state: State
 
 func enter() -> void:
 	super()
@@ -14,6 +15,8 @@ func process_input(event: InputEvent) -> State:
 		return jump_state
 	if Input.is_action_pressed('move_left') or Input.is_action_pressed('move_right'):
 		return move_state
+	elif Input.is_action_pressed('dash') and owner.dash:
+		return dash_state
 	return null
 
 func process_physics(delta: float) -> State:

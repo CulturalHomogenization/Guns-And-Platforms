@@ -1,8 +1,8 @@
 extends Node
 
 @export var shield_state : Boss_State
-@export var starting_state: Boss_State
-var current_state: Boss_State
+@export var starting_state: Boss_State 
+@export var current_state: Boss_State
 
 func init(parent: Boss) -> void:
 	for child in get_children():
