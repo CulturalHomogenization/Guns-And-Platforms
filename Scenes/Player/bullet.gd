@@ -13,18 +13,20 @@ func _physics_process(delta: float) -> void:
 
 func _process(delta: float) -> void:
 	position += (Vector2.RIGHT*speed).rotated(rotation) * delta
+	#moves the bullet
 
 func _on_visible_on_screen_enabler_2d_screen_exited() -> void:
-	queue_free()
+	queue_free() # if its not on screen, just delete it
 
 func _on_body_entered(body: Node2D) -> void:
 	if body.is_in_group("Player"):
-		pass
+		pass #dont damage the player by shooting lol
 	elif body.is_in_group("Enemies") and body.has_method("take_damage"):
 		body.take_damage(damage)
-		timer.start()
+		timer.start() #but if its an enemy, then i have made sure that they have a take_damage function and they will take damage upon being hit by a bullet
 	else:
 		queue_free()
 
 func _on_timer_timeout() -> void:
 	queue_free()
+#not going to lie, this timer was added for a bugfix, where if you stand close enough to the boss you can shoot straight through him

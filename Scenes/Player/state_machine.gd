@@ -1,5 +1,7 @@
 extends Node
 
+#this works exactly the same as the boss state machine, in fact they are the exact same
+
 @export var starting_state: State
 var current_state: State
 

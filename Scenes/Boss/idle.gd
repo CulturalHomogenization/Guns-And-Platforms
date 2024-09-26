@@ -2,6 +2,11 @@ extends Boss_State
 @export var walk_state: Boss_State
 var player_entered: bool = false
 
+#this is the code for the idle state of the boss, very very basic
+#it first of all plays the idle animation, with the line super() and then
+#just waits till a player is detected, at which point it transitions into walk state
+# to start pursuit. thats all it does.
+
 func enter() -> void:
 	super()
 

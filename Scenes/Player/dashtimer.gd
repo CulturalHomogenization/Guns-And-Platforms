@@ -8,3 +8,5 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	dash.value = time_left
+
+# a failed attempt at making a dash timer ui, please ignore

@@ -1,7 +1,10 @@
 class_name State
 extends Node
 
-@export var animation_name: String
+#once again this is the "default template" for each state. this declares the class name state and
+#each state extends from this
+
+@export var animation_name: String 
 @export var move_speed: float = 400
 
 var gravity: int = ProjectSettings.get_setting("physics/2d/default_gravity")

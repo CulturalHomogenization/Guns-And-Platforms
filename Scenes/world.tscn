@@ -3,7 +3,6 @@
 [ext_resource type="Texture2D" uid="uid://bpl8ik7cyvcs7" path="res://Assets/TileSheets/GreenZone/Tiles.png" id="1_0al3r"]
 [ext_resource type="PackedScene" uid="uid://c0c88735synyl" path="res://Scenes/Player/player.tscn" id="2_iy3x8"]
 [ext_resource type="Script" path="res://Scenes/camera_2d.gd" id="2_x1ndl"]
-[ext_resource type="Script" path="res://Scenes/enemy_spawner.gd" id="3_oiru3"]
 [ext_resource type="PackedScene" uid="uid://chwr42efi5ec1" path="res://Scenes/Boss/boss.tscn" id="3_uklf7"]
 [ext_resource type="Script" path="res://Scenes/kill_zone.gd" id="6_uro4e"]
 
@@ -394,6 +393,28 @@ texture = ExtResource("1_0al3r")
 physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_52bn4")
 
+[sub_resource type="GDScript" id="GDScript_kn0ln"]
+script/source = "extends Node
+
+@onready var spawn_timer: Timer = $SpawnTimer
+@onready var spawn_points = $SpawnPoints.get_children()
+@onready var world = get_node(\"/root/World\")
+@onready var camera = $\"..\"
+const drone = preload(\"res://Scenes/AttackDrone/attack_drone.tscn\")
+
+func spawn_enemy():
+	var enemy = drone.instantiate()
+	var spawn_point = spawn_points.pick_random()
+	enemy.global_position = spawn_point.global_position
+	world.add_child(enemy)
+
+func _on_spawn_timer_timeout() -> void:
+	#spawn_enemy()
+	#print(\"spawned\")
+	#spawn_timer.start()
+	pass
+"
+
 [sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_nixms"]
 
 [node name="World" type="Node"]
@@ -413,7 +434,7 @@ limit_smoothed = true
 script = ExtResource("2_x1ndl")
 
 [node name="EnemySpawner" type="Node2D" parent="Camera2D"]
-script = ExtResource("3_oiru3")
+script = SubResource("GDScript_kn0ln")
 
 [node name="SpawnPoints" type="Node2D" parent="Camera2D/EnemySpawner"]
 

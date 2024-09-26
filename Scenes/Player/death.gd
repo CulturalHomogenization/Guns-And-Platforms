@@ -9,3 +9,5 @@ func enter() -> void:
 	await get_tree().create_timer(1.0).timeout
 	if get_tree():
 		get_tree().reload_current_scene()
+
+#very straightforward, just plays the death animation, and then 1 second later the scene restarts
