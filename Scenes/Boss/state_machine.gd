@@ -31,7 +31,7 @@ func process_frame(delta: float) -> void:
 		change_state(new_state)
 
 func _on_timer_timeout() -> void:
-	if owner.shield_timer.wait_time == 10:
+	if owner.shield_timer.wait_time == 3:
 		owner.shield = true
 
 func _on_projectile_detection_area_entered(area: Area2D) -> void:

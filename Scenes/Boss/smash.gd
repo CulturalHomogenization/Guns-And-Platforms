@@ -14,5 +14,6 @@ func process_frame(delta: float) -> Boss_State:
 	else:
 		return walk_state
 
-func _on_projectile_detection_body_exited(body: Node2D) -> void:
-	owner.caught = false
+func _on_projectile_detection_body_exited(body: Node2D):
+	if body.is_in_group("Player"):
+		owner.caught = false

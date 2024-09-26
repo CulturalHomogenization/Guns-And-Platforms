@@ -1,11 +1,15 @@
-[gd_scene load_steps=29 format=3 uid="uid://un57tjg36jg1"]
+[gd_scene load_steps=24 format=3 uid="uid://un57tjg36jg1"]
 
 [ext_resource type="Script" path="res://Scenes/AttackDrone/attack_drone.gd" id="1_0fro2"]
 [ext_resource type="Texture2D" uid="uid://bvswyyv4ym5ym" path="res://Assets/Enemies/AttackDrone/Attack.png" id="1_lpboe"]
 [ext_resource type="Texture2D" uid="uid://b18glwoemlhhn" path="res://Assets/Enemies/AttackDrone/Death.png" id="2_2hufc"]
+[ext_resource type="PackedScene" uid="uid://cdie0484mt78b" path="res://Scenes/Other/health_bar.tscn" id="2_gn0od"]
 [ext_resource type="Texture2D" uid="uid://jx5blg0q3omq" path="res://Assets/Enemies/AttackDrone/Hurt.png" id="3_j0lo3"]
-[ext_resource type="Texture2D" uid="uid://sgln2ik6qgoa" path="res://Assets/Enemies/AttackDrone/Idle.png" id="4_qiaka"]
 [ext_resource type="Texture2D" uid="uid://8d5q7nx5q3h4" path="res://Assets/Enemies/AttackDrone/Walk.png" id="5_kqfx7"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_dl1ng"]
+atlas = ExtResource("5_kqfx7")
+region = Rect2(48, 0, 32, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ygo6v"]
 atlas = ExtResource("1_lpboe")
@@ -47,29 +51,9 @@ region = Rect2(0, 0, 32, 48)
 atlas = ExtResource("3_j0lo3")
 region = Rect2(48, 0, 32, 48)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_celad"]
-atlas = ExtResource("4_qiaka")
-region = Rect2(0, 0, 32, 48)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ans8r"]
-atlas = ExtResource("4_qiaka")
-region = Rect2(48, 0, 32, 48)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_kmm3k"]
-atlas = ExtResource("4_qiaka")
-region = Rect2(96, 0, 32, 48)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_phqbk"]
-atlas = ExtResource("4_qiaka")
-region = Rect2(144, 0, 32, 48)
-
 [sub_resource type="AtlasTexture" id="AtlasTexture_nhbnf"]
 atlas = ExtResource("5_kqfx7")
 region = Rect2(0, 0, 32, 48)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_dl1ng"]
-atlas = ExtResource("5_kqfx7")
-region = Rect2(48, 0, 32, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4jwpb"]
 atlas = ExtResource("5_kqfx7")
@@ -82,6 +66,9 @@ region = Rect2(144, 0, 32, 48)
 [sub_resource type="SpriteFrames" id="SpriteFrames_mtiw5"]
 animations = [{
 "frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_dl1ng")
+}, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_ygo6v")
 }, {
@@ -128,23 +115,6 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("AtlasTexture_celad")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ans8r")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_kmm3k")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_phqbk")
-}],
-"loop": true,
-"name": &"idle",
-"speed": 5.0
-}, {
-"frames": [{
-"duration": 1.0,
 "texture": SubResource("AtlasTexture_nhbnf")
 }, {
 "duration": 1.0,
@@ -158,45 +128,47 @@ animations = [{
 }],
 "loop": true,
 "name": &"pursuit",
-"speed": 5.0
+"speed": 7.5
 }]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_u7uyy"]
 size = Vector2(16, 21)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_sw0tq"]
-size = Vector2(11, 81)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ywlrk"]
+size = Vector2(44, 108.5)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_rckm8"]
-size = Vector2(355.75, 158.375)
-
-[node name="AttackDrone" type="CharacterBody2D"]
+[node name="AttackDrone" type="CharacterBody2D" groups=["Enemies"]]
+motion_mode = 1
+wall_min_slide_angle = 0.0
 script = ExtResource("1_0fro2")
+speed = 250
+
+[node name="HealthBar" parent="." instance=ExtResource("2_gn0od")]
+offset_left = -19.0
+offset_top = -19.0
+offset_right = 16.0
+offset_bottom = -16.0
 
 [node name="animations" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_mtiw5")
-animation = &"idle"
-frame = 2
-frame_progress = 0.299718
+animation = &"attack"
 
 [node name="hitbox" type="CollisionShape2D" parent="."]
 position = Vector2(-1, -2.5)
 shape = SubResource("RectangleShape2D_u7uyy")
 
-[node name="hurtbox" type="Area2D" parent="."]
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.2
+autostart = true
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="hurtbox"]
-position = Vector2(-0.5, 48.5)
-shape = SubResource("RectangleShape2D_sw0tq")
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
 
 [node name="PlayerDetection" type="Area2D" parent="."]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetection"]
-position = Vector2(-1, 65.8125)
-shape = SubResource("RectangleShape2D_rckm8")
-
-[node name="Timer" type="Timer" parent="."]
-wait_time = 10.0
-autostart = true
+position = Vector2(-4, 59)
+shape = SubResource("RectangleShape2D_ywlrk")
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="body_entered" from="PlayerDetection" to="." method="_on_player_detection_body_entered"]
+[connection signal="body_exited" from="PlayerDetection" to="." method="_on_player_detection_body_exited"]

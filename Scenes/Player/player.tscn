@@ -1,10 +1,11 @@
-[gd_scene load_steps=38 format=3 uid="uid://c0c88735synyl"]
+[gd_scene load_steps=51 format=3 uid="uid://c0c88735synyl"]
 
 [ext_resource type="Script" path="res://Scenes/Player/player.gd" id="1_ng86c"]
 [ext_resource type="Texture2D" uid="uid://cgor4t4n8kuow" path="res://Assets/Character/Jump2.png" id="2_jursn"]
 [ext_resource type="Texture2D" uid="uid://bjndxptsw6x7p" path="res://Assets/Character/Idle1.png" id="2_qjb0h"]
 [ext_resource type="Texture2D" uid="uid://bxi2fm8cuw11v" path="res://Assets/Character/Dash.png" id="2_vipg6"]
 [ext_resource type="Texture2D" uid="uid://bu4gmkiaflcsy" path="res://Assets/Character/Cyborg_hurt.png" id="3_658a4"]
+[ext_resource type="Texture2D" uid="uid://yrnrk31v4irp" path="res://Assets/Character/Cyborg_death.png" id="3_ppcox"]
 [ext_resource type="Script" path="res://Scenes/Player/state_machine.gd" id="3_vved1"]
 [ext_resource type="Script" path="res://Scenes/Player/move.gd" id="4_ys83l"]
 [ext_resource type="Script" path="res://Scenes/Player/idle.gd" id="5_coukq"]
@@ -16,6 +17,9 @@
 [ext_resource type="Script" path="res://Scenes/Player/fall.gd" id="8_7yb0h"]
 [ext_resource type="Script" path="res://Scenes/Player/hurt.gd" id="13_cu4re"]
 [ext_resource type="Script" path="res://Scenes/Player/dash.gd" id="16_68al8"]
+[ext_resource type="Script" path="res://Scenes/Player/death.gd" id="17_6yoqn"]
+[ext_resource type="PackedScene" uid="uid://cdie0484mt78b" path="res://Scenes/Other/health_bar.tscn" id="17_f75ar"]
+[ext_resource type="Script" path="res://Scenes/Player/dashtimer.gd" id="19_bsad5"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_2jo1o"]
 atlas = ExtResource("2_vipg6")
@@ -28,6 +32,30 @@ region = Rect2(96, 0, 32, 48)
 [sub_resource type="AtlasTexture" id="AtlasTexture_i2y2y"]
 atlas = ExtResource("2_vipg6")
 region = Rect2(144, 0, 32, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_81bsq"]
+atlas = ExtResource("3_ppcox")
+region = Rect2(0, 0, 32, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0qmcv"]
+atlas = ExtResource("3_ppcox")
+region = Rect2(48, 0, 32, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qnl7q"]
+atlas = ExtResource("3_ppcox")
+region = Rect2(96, 0, 32, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_c3ki0"]
+atlas = ExtResource("3_ppcox")
+region = Rect2(144, 0, 32, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gbp1u"]
+atlas = ExtResource("3_ppcox")
+region = Rect2(192, 0, 32, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s7vjl"]
+atlas = ExtResource("3_ppcox")
+region = Rect2(240, 0, 32, 48)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ivp5q"]
 atlas = ExtResource("2_jursn")
@@ -100,6 +128,29 @@ animations = [{
 "loop": true,
 "name": &"dash",
 "speed": 7.5
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_81bsq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0qmcv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qnl7q")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_c3ki0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gbp1u")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s7vjl")
+}],
+"loop": false,
+"name": &"death",
+"speed": 5.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -188,29 +239,44 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="player" type="CharacterBody2D" node_paths=PackedStringArray("hurt_state") groups=["Player"]]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_2jcq4"]
+bg_color = Color(0.826704, 0.40573, 0, 1)
+expand_margin_left = 1.0
+expand_margin_top = 1.0
+expand_margin_right = 1.0
+expand_margin_bottom = 1.0
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_n8b3s"]
+bg_color = Color(1, 1, 1, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_cd3hg"]
+font_size = 100
+
+[node name="player" type="CharacterBody2D" node_paths=PackedStringArray("hurt_state", "death_state") groups=["Player"]]
 script = ExtResource("1_ng86c")
 hurt_state = NodePath("state_machine/hurt")
+death_state = NodePath("state_machine/death")
+
+[node name="Marker2D" type="Marker2D" parent="."]
+position = Vector2(-1, -105)
 
 [node name="animations" type="AnimatedSprite2D" parent="."]
-position = Vector2(-7, -24)
+position = Vector2(-1, -24)
 sprite_frames = SubResource("SpriteFrames_5ledj")
-animation = &"dash"
-frame = 2
-frame_progress = 0.401941
-offset = Vector2(10, 0)
+animation = &"death"
 
 [node name="collision" type="CollisionShape2D" parent="." groups=["Player"]]
 position = Vector2(0, -16)
 shape = SubResource("CapsuleShape2D_7rjs2")
 
-[node name="gun" type="AnimatedSprite2D" parent="."]
+[node name="gun" type="AnimatedSprite2D" parent="." node_paths=PackedStringArray("hurt_state")]
 position = Vector2(-3, -16)
 rotation = -6.28319
 scale = Vector2(0.8, 0.8)
 sprite_frames = SubResource("SpriteFrames_nupkb")
 offset = Vector2(6.465, 0)
 script = ExtResource("6_8p7cf")
+hurt_state = NodePath("../state_machine/hurt")
 
 [node name="Marker2D" type="Marker2D" parent="gun"]
 position = Vector2(18.75, -1.25)
@@ -220,6 +286,10 @@ scale = Vector2(1.25, 1.25)
 wait_time = 0.2
 one_shot = true
 autostart = true
+
+[node name="ReloadTimer" type="Timer" parent="gun"]
+wait_time = 1.5
+one_shot = true
 
 [node name="state_machine" type="Node" parent="." node_paths=PackedStringArray("starting_state")]
 script = ExtResource("3_vved1")
@@ -276,17 +346,58 @@ move_speed = 500.0
 [node name="Timer" type="Timer" parent="state_machine/dash"]
 wait_time = 0.3
 
+[node name="death" type="Node" parent="state_machine"]
+script = ExtResource("17_6yoqn")
+animation_name = "death"
+
+[node name="Timer" type="Timer" parent="state_machine/death"]
+one_shot = true
+
 [node name="Invinsibility" type="Timer" parent="."]
-wait_time = 2.0
+wait_time = 0.7
 
 [node name="Dash" type="Timer" parent="."]
 wait_time = 5.0
 autostart = true
+script = ExtResource("19_bsad5")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Ammo" type="ProgressBar" parent="CanvasLayer"]
+offset_right = 4.0
+offset_bottom = 27.0
+show_percentage = false
+
+[node name="Dash" type="ProgressBar" parent="CanvasLayer"]
+offset_left = 15.0
+offset_top = 42.0
+offset_right = 159.0
+offset_bottom = 69.0
+theme_override_styles/background = SubResource("StyleBoxFlat_2jcq4")
+theme_override_styles/fill = SubResource("StyleBoxFlat_n8b3s")
+show_percentage = false
+
+[node name="HealthBar" parent="CanvasLayer" instance=ExtResource("17_f75ar")]
+offset_left = 16.0
+offset_top = 12.0
+offset_right = 244.0
+offset_bottom = 35.0
+
+[node name="Label" type="Label" parent="CanvasLayer"]
+visible = false
+offset_left = 312.0
+offset_top = 254.0
+offset_right = 864.0
+offset_bottom = 391.0
+text = "YOU WIN!!!!"
+label_settings = SubResource("LabelSettings_cd3hg")
 
 [connection signal="ready" from="." to="." method="_on_ready"]
 [connection signal="timeout" from="gun/Timer" to="gun" method="_on_timer_timeout"]
+[connection signal="timeout" from="gun/ReloadTimer" to="gun" method="_on_reload_timer_timeout"]
 [connection signal="timeout" from="state_machine/hurt/Timer" to="." method="_on_timer_timeout"]
 [connection signal="timeout" from="state_machine/hurt/Timer" to="state_machine/hurt" method="_on_timer_timeout"]
 [connection signal="timeout" from="state_machine/dash/Timer" to="state_machine/dash" method="_on_timer_timeout"]
+[connection signal="timeout" from="state_machine/death/Timer" to="state_machine/death" method="_on_timer_timeout"]
 [connection signal="timeout" from="Invinsibility" to="." method="_on_invinsibility_timeout"]
 [connection signal="timeout" from="Dash" to="." method="_on_dash_timeout"]
